@@ -118,12 +118,24 @@ impl NeuralNetwork {
 
 }
 
-fn activate(x: f64, activation: Activation) -> f64 {
+pub fn activate(x: f64, activation: Activation) -> f64 {
     match activation {
         Activation::Sigmoid => 1.0 / (1.0 + (1.0_f64).exp().powf(x)),
         Activation::ReLU => if x >= 0.0 { x } else { 0.0 },
         Activation::Id => x,
         Activation::Custom { activate: s, activate_prime: _} => s(x)
+    }
+}
+
+pub fn activate_prime(x: f64, activation: Activation) -> f64 {
+    match activation {
+        Activation::Sigmoid => {
+            let s = activate(x, Activation::Sigmoid);
+            s * (1.0 - s)
+        } 
+        Activation::ReLU => if x >= 0.0 { 1.0 } else { 0.0 },
+        Activation::Id => x,
+        Activation::Custom { activate: _, activate_prime: s} => s(x)
     }
 }
 
