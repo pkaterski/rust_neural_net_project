@@ -1,9 +1,9 @@
 use rand::Rng;
 
-struct Neuron {
-    bias: f64,
-    output: f64,
-    weights: Vec<f64>
+pub struct Neuron {
+    pub bias: f64,
+    pub output: f64,
+    pub weights: Vec<f64>
 }
 
 impl Neuron {
@@ -13,7 +13,7 @@ impl Neuron {
 
     fn new_rand(input_count: usize, mut rng: rand::rngs::ThreadRng, scale: f64) -> Self {
         let mut weights = Vec::new();
-        for i in 0..input_count {
+        for _ in 0..input_count {
             weights.push(rng.gen::<f64>() * scale);
         }
         let bias = rng.gen();
@@ -23,7 +23,7 @@ impl Neuron {
 }
 
 #[derive(Copy, Clone)]
-enum Activation {
+pub enum Activation {
     Sigmoid,
     ReLU,
     Id,
@@ -33,9 +33,9 @@ enum Activation {
     }
 }
 
-struct Layer {
-    neurons: Vec<Neuron>,
-    activation: Activation
+pub struct Layer {
+    pub neurons: Vec<Neuron>,
+    pub activation: Activation
 }
 
 impl Layer {
@@ -50,7 +50,7 @@ impl Layer {
         scale: f64,
         activation: Activation) -> Self {
         let mut neurons = Vec::new();
-        for i in 0..size {
+        for _ in 0..size {
             neurons.push(Neuron::new_rand(prev_layer_size, rng, scale));
         } 
         Layer { neurons, activation }
@@ -66,7 +66,7 @@ impl Layer {
 }
 
 pub struct NeuralNetwork {
-    layers: Vec<Layer>
+    pub layers: Vec<Layer>
 }
 
 impl NeuralNetwork {
