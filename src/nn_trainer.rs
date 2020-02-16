@@ -206,6 +206,20 @@ mod test {
     use super::*;
 
     #[test]
+    fn test_derivative_sigmoid() {
+        let x = 4.3;
+        let delta = 0.00001;
+
+        let f = crate::nn::activate(x, crate::nn::Activation::Sigmoid);
+        let f_d = crate::nn::activate(x + delta, crate::nn::Activation::Sigmoid);
+        let f_p = crate::nn::activate_prime(x, crate::nn::Activation::Sigmoid);
+
+        let f_p2 = (f_d - f) / delta;
+
+        assert!((f_p - f_p2).abs() < 0.001);
+    }
+
+    #[test]
     fn test_logical_or() {
         let data = vec![
             (vec![0.0, 0.0], vec![1.0, 0.0]),
