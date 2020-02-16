@@ -6,30 +6,36 @@ use json;
 
 fn main() {
     let data = load_data();
-    let (x, y) = &data[8];
-    display_digit(&x);
-    println!("{:?}", y);
 
     let mut nn = nn::NeuralNetwork::new_rand(&vec![784usize, 10usize], 0.1);
-    let mut nn_t = nn_trainer::NeuralNetworkTrainer::new(&nn);
+    train(&mut nn, &data);
 
-    for i in 1..2 {
-        // epochs
-        for _ in 0..3 {
-            let e = nn_t.update_mini_batch(
-                &mut nn,
-                &data[((i-1)*1000)..(i*1000 - 1)].to_vec(),
-                0.5,
-                0.1);
-            println!("err {}", e);
-        }
-    }
+    display_results(&mut nn, &data);
+}
 
+fn display_results(nn: &mut nn::NeuralNetwork, data: &Vec<(Vec<f64>, Vec<f64>)>) {
     for i in 1000..1010 {
         let (x, y) = &data[i];
         display_digit(x);
         println!("y: {:?}", y);
         println!("predic: {:?}", nn.forward(x));
+    }
+}
+
+fn train(nn: &mut nn::NeuralNetwork, data: &Vec<(Vec<f64>, Vec<f64>)>) {
+    let mut nn_t = nn_trainer::NeuralNetworkTrainer::new(&nn);
+
+    // batches
+    for i in 1..2 {
+        // epochs
+        for _ in 0..3 {
+            let e = nn_t.update_mini_batch(
+                nn,
+                &data[((i-1)*1000)..(i*1000 - 1)].to_vec(),
+                0.5,
+                0.1);
+            println!("err {}", e);
+        }
     }
 }
 
