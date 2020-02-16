@@ -120,7 +120,7 @@ impl NeuralNetwork {
 
 pub fn activate(x: f64, activation: Activation) -> f64 {
     match activation {
-        Activation::Sigmoid => 1.0 / (1.0 + (1.0_f64).exp().powf(x)),
+        Activation::Sigmoid => 1.0 / (1.0 + (1.0_f64).exp().powf(-x)),
         Activation::ReLU => if x >= 0.0 { x } else { 0.0 },
         Activation::Id => x,
         Activation::Custom { activate: s, activate_prime: _} => s(x)

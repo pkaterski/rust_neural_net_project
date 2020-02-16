@@ -10,7 +10,7 @@ fn main() {
     display_digit(&x);
     println!("{:?}", y);
 
-    let mut nn = nn::NeuralNetwork::new_rand(&vec![784usize, 30usize, 10usize], 1.0);
+    let mut nn = nn::NeuralNetwork::new_rand(&vec![784usize, 10usize], 0.1);
     let mut nn_t = nn_trainer::NeuralNetworkTrainer::new(&nn);
 
     for i in 1..2 {

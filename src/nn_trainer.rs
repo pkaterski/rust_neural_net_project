@@ -11,7 +11,7 @@ struct NeuronHelper {
 impl NeuronHelper {
     fn init(input_count: usize) -> Self {
         let mut dw = Vec::new();
-        for i in 0..input_count {
+        for _ in 0..input_count {
             dw.push(0.0);
         }
         NeuronHelper { delta:0.0, a: 0.0, z: 0.0, db: 0.0, dw }
@@ -66,15 +66,15 @@ impl NeuralNetworkTrainer {
         input: &Vec<f64>,
         target_output: &Vec<f64>) -> Vec<LayerHelper> {
         // handle error
-        if (nn.layers.len() < 2) {
+        if nn.layers.len() < 2 {
             panic!("invalid neural network");
         }
 
-        if (nn.layers[0].neurons.len() != input.len()) {
+        if nn.layers[0].neurons.len() != input.len() {
             panic!("nerual network layer_0 and input mismatch");
         }
 
-        if (nn.layers[nn.layers.len() - 1].neurons.len() != target_output.len()) {
+        if nn.layers[nn.layers.len() - 1].neurons.len() != target_output.len() {
             panic!("nerual network layer_Last and output mismatch");
         }
 
