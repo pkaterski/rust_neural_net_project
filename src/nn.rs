@@ -7,10 +7,6 @@ pub struct Neuron {
 }
 
 impl Neuron {
-    // fn new(weights: Vec<f64>, bias: f64) -> Self {
-    //     Neuron { weights, bias, output: 0.0 }
-    // }
-
     fn new_rand(input_count: usize, mut rng: rand::rngs::ThreadRng, scale: f64) -> Self {
         let mut weights = Vec::new();
         for _ in 0..input_count {
@@ -43,10 +39,6 @@ pub struct Layer {
 }
 
 impl Layer {
-    // fn new(neurons: Vec<Neuron>, activation: Activation) -> Self {
-    //     Layer { neurons, activation }
-    // }
-
     fn new_rand(
         size: usize,
         prev_layer_size: usize,
@@ -212,10 +204,38 @@ mod test {
     }
 
     #[test]
+    fn test_weights_ranges_at_scales() {
+        let dim = vec![888, 20, 55, 3, 7, 10];
+        for r in 1..10 {
+            let scale = (r as f64) / 10.0;
+            let nn = NeuralNetwork::new_rand(&dim, scale);
+            for i in 0..dim.len() {
+                for j in 0..nn.layers[i].neurons.len() {
+                    for k in 0..nn.layers[i].neurons[j].weights.len() {
+                        assert!(nn.layers[i].neurons[j].weights[k] < 1.0 * scale);
+                        assert!(nn.layers[i].neurons[j].weights[k] >= 0.0);
+                    }
+                }
+            }
+        }
+    }
+
+    #[test]
     fn test_forward() {
         let dim = vec![4, 20, 55, 3, 7, 10];
         let mut nn = NeuralNetwork::new_rand(&dim, 1.0);
         let res = nn.forward(&vec![0.0, 0.5, 0.8, 0.9]);
         assert_eq!(res.len(), 10);
+    }
+
+    #[test]
+    fn test_result_activation() {
+        let dim = vec![4, 20, 55, 3, 7, 10];
+        let mut nn = NeuralNetwork::new_rand(&dim, 1.0);
+        let res = nn.forward(&vec![0.0, 0.5, 0.8, 0.9]);
+        for i in 0..res.len() {
+            assert!(res[i] <= 1.0);
+            assert!(res[i] >= 0.0);
+        }
     }
 }
