@@ -7,9 +7,9 @@ pub struct Neuron {
 }
 
 impl Neuron {
-    fn new(weights: Vec<f64>, bias: f64) -> Self {
-        Neuron { weights, bias, output: 0.0 }
-    }
+    // fn new(weights: Vec<f64>, bias: f64) -> Self {
+    //     Neuron { weights, bias, output: 0.0 }
+    // }
 
     fn new_rand(input_count: usize, mut rng: rand::rngs::ThreadRng, scale: f64) -> Self {
         let mut weights = Vec::new();
@@ -39,14 +39,14 @@ pub struct Layer {
 }
 
 impl Layer {
-    fn new(neurons: Vec<Neuron>, activation: Activation) -> Self {
-        Layer { neurons, activation }
-    }
+    // fn new(neurons: Vec<Neuron>, activation: Activation) -> Self {
+    //     Layer { neurons, activation }
+    // }
 
     fn new_rand(
         size: usize,
         prev_layer_size: usize,
-        mut rng: rand::rngs::ThreadRng,
+        rng: rand::rngs::ThreadRng,
         scale: f64,
         activation: Activation) -> Self {
         let mut neurons = Vec::new();
@@ -73,7 +73,7 @@ impl NeuralNetwork {
     pub fn new_rand(sizes: &Vec<usize>, scale: f64) -> Self {
         let mut layers = Vec::new();
         let sigmoid = Activation::Sigmoid;
-        let mut rng = rand::thread_rng();
+        let rng = rand::thread_rng();
 
         layers.push(Layer::new_rand(sizes[0], 0, rng, 0.0, Activation::Id));
         for i in 0..layers[0].neurons.len() {
@@ -143,10 +143,6 @@ pub fn activate_prime(x: f64, activation: Activation) -> f64 {
 #[cfg(test)]
 mod test {
     use super::*;
-    #[test]
-    fn it_works() {
-        assert_eq!(2 + 2,4);
-    }
 
     #[test]
     fn test_initial_layer() {
