@@ -283,4 +283,47 @@ mod test {
         }
         index as u32
     }
+
+    #[test]
+    #[should_panic(expected = "Cannot compute error. NN output and y dims mismatch")]
+    fn cost_dimentions_mismatch() {
+        let y = vec![1.0, 0.0];
+        let y_t = vec![1.0];
+
+        NeuralNetworkTrainer::cost(&y, &y_t);
+    }
+
+    #[test]
+    #[should_panic(expected = "nerual network layer_0 and input mismatch")]
+    fn trainer_input_mismatch() {
+        let dim = vec![10usize, 2usize];
+        let data = vec![
+            (vec![0.0, 0.0], vec![1.0, 0.0]),
+            (vec![0.0, 1.0], vec![1.0, 0.0]),
+            (vec![1.0, 0.0], vec![1.0, 0.0]),
+            (vec![1.0, 1.0], vec![0.0, 1.0]),
+        ];
+
+        let mut nn = crate::nn::NeuralNetwork::new_rand(&dim, 0.1);
+        let mut nn_t = NeuralNetworkTrainer::new(&mut nn);
+
+        nn_t.update_mini_batch(&mut nn, &data, 0.5, 0.1);
+    }
+
+    #[test]
+    #[should_panic(expected = "nerual network layer_Last and output mismatch")]
+    fn trainer_output_mismatch() {
+        let dim = vec![2usize, 20usize];
+        let data = vec![
+            (vec![0.0, 0.0], vec![1.0, 0.0]),
+            (vec![0.0, 1.0], vec![1.0, 0.0]),
+            (vec![1.0, 0.0], vec![1.0, 0.0]),
+            (vec![1.0, 1.0], vec![0.0, 1.0]),
+        ];
+
+        let mut nn = crate::nn::NeuralNetwork::new_rand(&dim, 0.1);
+        let mut nn_t = NeuralNetworkTrainer::new(&mut nn);
+
+        nn_t.update_mini_batch(&mut nn, &data, 0.5, 0.1);
+    }
 }

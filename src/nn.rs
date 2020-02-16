@@ -71,6 +71,10 @@ pub struct NeuralNetwork {
 
 impl NeuralNetwork {
     pub fn new_rand(sizes: &Vec<usize>, scale: f64) -> Self {
+        if sizes.len() < 2 {
+            panic!("nn should have at least input and output layers");
+        }
+
         let mut layers = Vec::new();
         let sigmoid = Activation::Sigmoid;
         let rng = rand::thread_rng();
@@ -237,5 +241,27 @@ mod test {
             assert!(res[i] <= 1.0);
             assert!(res[i] >= 0.0);
         }
+    }
+
+    #[test]
+    #[should_panic(expected = "input and layer_0 dimimentions mismatch")]
+    fn test_invalid_input() {
+        let dim = vec![4, 20, 55, 3, 7, 10];
+        let mut nn = NeuralNetwork::new_rand(&dim, 1.0);
+        let _ = nn.forward(&vec![0.0, 0.5, 0.8]);
+    }
+
+    #[test]
+    #[should_panic(expected = "nn should have at least input and output layers")]
+    fn test_no_input() {
+        let dim = vec![];
+        let _ = NeuralNetwork::new_rand(&dim, 1.0);
+    }
+
+    #[test]
+    #[should_panic(expected = "nn should have at least input and output layers")]
+    fn test_no_output() {
+        let dim = vec![10usize];
+        let _ = NeuralNetwork::new_rand(&dim, 1.0);
     }
 }
