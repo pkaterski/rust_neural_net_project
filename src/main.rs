@@ -24,8 +24,10 @@ fn display_results(nn: &mut nn::NeuralNetwork, data: &Vec<(Vec<f64>, Vec<f64>)>)
     for i in 1000..1010 {
         let (x, y) = &data[i];
         display_digit(x);
-        println!("y: {:?}", y);
-        println!("predic: {:?}", nn.forward(x));
+        let pred = nn.forward(x);
+        println!("label: {}", get_max_index(y));
+        println!("prediction: {:?}", get_max_index(&pred));
+        println!("prediction vector: {:?}", pred);
     }
 }
 
@@ -78,4 +80,19 @@ fn load_data() -> Result<Vec<(Vec<f64>, Vec<f64>)>, String> {
         data.push((pic, y));
     }
     Ok(data)
+}
+
+fn get_max_index(v: &Vec<f64>) -> u32 {
+    if v.len() == 0 {
+        panic!("oh no - cannot get max of empty vector");
+    }
+    let mut index = 0;
+    let mut max = v[0];
+    for i in 0..v.len() {
+        if v[i] > max {
+            max = v[i];
+            index = i;
+        }
+    }
+    index as u32
 }
