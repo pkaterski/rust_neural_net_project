@@ -22,14 +22,14 @@ struct LayerHelper {
     neurons: Vec<NeuronHelper>
 }
 
-struct NeuralNetworkTrainer {
+pub struct NeuralNetworkTrainer {
     // the layers containing the gradient of the previous update to the neural network
     // stored for applying momentum to the learning
     prev_layers: Vec<LayerHelper> 
 }
 
 impl NeuralNetworkTrainer {
-    fn new(&self, nn: &nn::NeuralNetwork) -> Self {
+    pub fn new(nn: &nn::NeuralNetwork) -> Self {
         NeuralNetworkTrainer { prev_layers: NeuralNetworkTrainer::init_layers(nn) }
     }
 
@@ -128,7 +128,7 @@ impl NeuralNetworkTrainer {
 
         // Backpropagate the error: For each l=L−1,L−2,…,2 compute δl=((wl+1)Tδl+1)⊙σ′(zl).
         // δlj=∑k w(l+1)kj δ(l+1)kσ′(zlj).
-        for i in (0..layer_helpers.len() - 2).rev() {
+        for i in (1..(layer_helpers.len() - 1)).rev() {
             for j in 0..layer_helpers[i].neurons.len() {
                 let mut total = 0.0;
 
@@ -154,7 +154,7 @@ impl NeuralNetworkTrainer {
     pub fn update_mini_batch(
         &mut self,
         nn: &mut nn::NeuralNetwork,
-        mini_batch: Vec<(Vec<f64>, Vec<f64>)>,
+        mini_batch: &Vec<(Vec<f64>, Vec<f64>)>,
         eta: f64,
         momentum: f64) -> f64 {
         let mut nabla_layers = NeuralNetworkTrainer::init_layers(nn);
